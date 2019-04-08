@@ -1,0 +1,4 @@
+# Override for Makefile
+[{Makefile, *.mk, *.win}]
+indent_style = tab
+indent_size = 4

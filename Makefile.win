@@ -1,0 +1,39 @@
+CFLAGS = /Zi /Wall /wd4255 /wd4996 /wd4127 /wd4820 /wd4100 /wd4619 \
+		 /wd4514 /wd4668 /I.
+CC = cl /nologo
+TESTS = $(patsubst %.c, %.exe, $(wildcard test/*.c))
+
+%.exe:
+	$(CC) $(LDFLAGS) $(filter %.obj %.lib %.dll, $^) $(LDLIBS) /Fe $@
+
+%.o:
+	$(CC) $(CFLAGS) $(CPPFLAGS) /c $(filter %.c, $^) $(LDLIBS) /Fo $@
+
+%.lib:
+	lib /nologo /out:$@ $(filter %.obj, $^)
+
+%.dll:
+	lib /nologo /out:$@ $(filter %.obj, $^)
+
+all: next.lib tests
+
+next.lib: next.obj
+
+next.obj: next.c next.h
+
+tests: $(TESTS)
+
+$(TESTS): %.exe: %.obj next.lib
+
+$(patsubst %.exe, %.obj, $(TESTS)): %.obj: %.c next.h
+
+clean:
+	rm -rf *.obj t/*.obj next.lib $(TESTS)
+
+perf test: all
+	./test/time-parse
+
+check test: all
+	./test/test-parse
+
+.PHONY: all clean check test tests
