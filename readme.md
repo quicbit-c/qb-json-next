@@ -1,8 +1,15 @@
 # qb-json-next
 
-This is the C version of [qb-json-next](https://github.com/quicbit-js/qb-json-next) json parser that was first 
-made available in javascript.  It too is a zero-dependency light-weight library that parses json at a 
-rate of 800 MB/second.
+Three features set this JSON parser apart. qb-json-next is
+
+1. Fast/Efficient:  Parses 800 MB/second on a 2.2 GHz macbook.  Parsing has no overhead regardless of file size.
+2. Tiny with no dependencies. (about 350 lines of code in one file, library size is around 8 kb).
+3. Incremental.  The parsing can start and stop and continue again at any point, even 
+   between bytes in a unicode character which allows parsing across byte blocks.
+
+
+This is the C version of [javascript qb-json-next](https://github.com/quicbit-js/qb-json-next) 
+parser with optimizations that allow it to run roughly 2.5 times faster.
 
 
 ## Optimizations
@@ -15,10 +22,10 @@ is slower than the nodejs version.
 
 With optimization set to -O3, performance jumps to **550 MB per second**. 
 
-With optimization set and unfolding of string and decimal loops (allowing for some load parallelization),
-performance increases to **800 MB per second**.
+With optimization set and unfolding of string and decimal loops (allow parallel load handling across
+cores), performance increases to **800 MB per second**.
 
-With some more optimization, next.c could likely exceed 1 GB per second parsing. 
+I suspect with some more optimization, qb-json-next could exceed 1 GB per second on a normal machine. 
 
 ## API
 
