@@ -21,65 +21,39 @@
 #include <tap.h>
 #include "next.h"
 
-const int TOK_BUF_LIM = 100;
+int fprint_tokens (FILE* dst, char* src, int src_len, int toks_per_line) {
+  pstate* ps = new_ps(src, 0, src_len, 1000);
+  char buf[2048];
+  int len = 0;
+  while (next(ps, NULL)) {
+    tokstr(buf, ps, 0);
+    len += fprintf(dst, "%s,", buf);
+  }
+  len += fprintf(dst, "\n");
+  return len;
+}
+
 int main () {
   FILE * fp;
-  int flen;
-  char * buf;
-  char tokbuf[TOK_BUF_LIM];
 
-//  char* fname = "../../json-samples/cache_150mb.json";
   char* fname = "test/blockchain_unconfirmed.json";
   fp = fopen(fname, "rb");
-  if (fp == NULL) {
-    fprintf(stderr, "error opening '%s'\n", fname); exit(1);
-  }
+  if (fp == NULL) { fprintf(stderr, "error opening '%s'\n", fname); exit(1); }
 
-  // obtain file size:
+  // calculate file size:
   fseek(fp , 0 , SEEK_END);
-  flen = ftell(fp);
+  int src_len = ftell(fp);
   rewind(fp);
 
-  buf = (char*) malloc(flen);
-  if (buf == NULL) {
-    fprintf(stderr, "memory error\n"); exit(2);
-  }
+  char* src = (char*) malloc(src_len);
+  if (src == NULL) { fprintf(stderr, "memory error\n"); exit(2); }
+  if (fread(src, 1, src_len, fp) != src_len) { fprintf(stderr, "read error\n"); exit(3); }
 
-  if (fread(buf, 1, flen, fp) != flen) {
-    fprintf(stderr, "read error\n"); exit(3);
-  }
-  fprintf(stdout, "read %d bytes from '%s'\n", flen, fname);
-  clock_t t0 = clock();
-  pstate* ps = new_ps(buf, 0, flen, 1000);
-  while (next(ps, NULL)) {
-    print_ps(ps);
-  }
-  clock_t t1 = clock();
-  fprintf(stdout, "parsing finished\n");
-  fprintf(stdout, "%f seconds\n", ((double)(t1 - t0) / CLOCKS_PER_SEC));
-  tokstr(tokbuf, TOK_BUF_LIM, ps, 0);
-  printf("%s\n", tokbuf);
+  // fprintf(stdout, "read %d bytes from '%s'\n", src_len, fname);
+
+  int toks_per_line = 16;
+  fprint_tokens(stdout, src, src_len, toks_per_line);
+
   fclose(fp);
-  free(buf);
   return 0;
 }
-/*
-int main(int argc, char **argv) {
-    char* = fopen
-    char* input = "{\"a\":7, \"b\":[7,8,999] }";
-    pstate* ps = new_ps(input, 0, strlen(input), 100);
-    char buf[TOK_BUF_LIM];
-    while (next(ps, NULL)) {
-//        print_ps(ps);
-        tokstr(buf, TOK_BUF_LIM, ps, 0);
-        printf("%s\n", buf);
-    }
-
-//	int rc = ok(1 == 1, "1 equals 1");
-//    printf("rc: %d\n", rc);
-
-    return 0;
-}
-
-*/
-

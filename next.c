@@ -96,7 +96,6 @@ static void mod_init () {
 pstate* new_ps (char* src, int off, int lim, int max_depth) {
   pstate* ps = malloc(sizeof(pstate));
   ps->tok = 0;
-  ps->src = src;
   ps->src_len = 0;
   ps->soff = off;
   ps->koff = off;
@@ -108,6 +107,7 @@ pstate* new_ps (char* src, int off, int lim, int max_depth) {
   ps->lineoff = 1;
   ps->lim = lim;
   ps->stack = malloc(sizeof(int) * max_depth);
+  ps->src = src;
   return ps;
 }
 
@@ -143,21 +143,21 @@ static int skip_bytes (char* src, int off, int lim, char* bsrc) {
 // d2@6             - decimal 2 at offset 6
 // [@4              - array start at offset 4
 // ]@12             - array end at offset 12
-int tokstr (char* buf, int lim, pstate* ps, int detail) {
+int tokstr (char* dst, pstate* ps, int detail) {
   int off = 0;
   // key
   if (ps->klim > ps->koff) {
-    off += snprintf(buf, lim, "k%d@%d:", ps->klim - ps->koff, ps->koff);
+    off += sprintf(dst, "k%d@%d:", ps->klim - ps->koff, ps->koff);
   }
   // value
-  off += snprintf(buf+off, lim-off, "%c", ps->tok ? (char) ps->tok : '!');
+  off += sprintf(dst + off, "%c", ps->tok ? (char) ps->tok : '!');
   switch ((char) ps->tok) {
     case 't': case 'f': case 'n': case '[': case ']': case '{': case '}': case '(': case ')':
       break; // no length
     default:
-      off += snprintf(buf+off, lim-off, "%d", ps->vlim - ps->voff);
+      off += sprintf(dst + off, "%d", ps->vlim - ps->voff);
   }
-  off += snprintf(buf+off, lim-off, "@%d", ps->voff);
+  off += sprintf(dst + off, "@%d", ps->voff);
   return off;
 }
 
@@ -248,8 +248,11 @@ static int skip_dec (char* src, int off, int lim) {
   return (i < lim && (CMAP[(int) src[i]] & DELIM)) ? i : -lim;
 }
 
-void print_ps (pstate* ps) {
-    printf("tok:%c pos:%s koff:%d klim:%d voff:%d vlim:%d ec:%c\n", ps->tok, posname(ps->pos), ps->koff, ps->klim, ps->voff, ps->vlim, ps->ecode);
+void sprint_ps (char* dst, pstate* ps) {
+    sprintf(dst, "tok:%c pos:%s koff:%d klim:%d voff:%d vlim:%d ec:%c\n", ps->tok, posname(ps->pos), ps->koff, ps->klim, ps->voff, ps->vlim, ps->ecode);
+}
+void fprint_ps (FILE* dst, pstate* ps) {
+    fprintf(dst, "tok:%c pos:%s koff:%d klim:%d voff:%d vlim:%d ec:%c\n", ps->tok, posname(ps->pos), ps->koff, ps->klim, ps->voff, ps->vlim, ps->ecode);
 }
 
 int INITIALIZED = 0;

@@ -57,7 +57,7 @@ int main (int argc, char **argv) {
       clock_t t1 = clock();
       fprintf(stdout, "parsing finished\n");
       fprintf(stdout, "%f seconds\n", ((double)(t1 - t0) / CLOCKS_PER_SEC));
-      tokstr(tokbuf, TOK_BUF_LIM, ps, 0);
+      tokstr(tokbuf, ps, 0);
       printf("%s\n", tokbuf);
       rewind(fp);
   }

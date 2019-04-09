@@ -50,25 +50,24 @@ static const int ECODE_UNEXPECTED = 85;   // 'U'  encountered a recognized token
 
 typedef struct ps {
     int soff;
-    char* src;
     int src_len;
-
     int lim;
     int koff;
     int klim;
     int voff;
     int vlim;
     int tok;
-    int* stack;
     int stack_len;
     int pos;
     int ecode;
     int vcount;
     int line;
     int lineoff;
-
-    char* next_src;
     int next_src_len;
+    char buf[2048];         // scratch buffer for tokstr etc.
+    int* stack;
+    char* src;
+    char* next_src;
 } pstate;
 
 pstate* new_ps (char* src, int off, int lim, int max_depth);
@@ -80,7 +79,8 @@ typedef struct nopt {
 pstate init (pstate ps);
 int next (pstate* ps, next_opt* opt);
 char* posname (int pos);
-void print_ps (pstate* ps);
-int tokstr (char* buf, int lim, pstate* ps, int detail);
+void sprint_ps (char* dst, pstate* ps);
+void fprint_ps (FILE* dst, pstate* ps);
+int tokstr (char* dst, pstate* ps, int detail);
 
 #endif      // NEXT_H
