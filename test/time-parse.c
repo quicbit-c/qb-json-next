@@ -22,7 +22,7 @@
 #include "next.h"
 
 const int TOK_BUF_LIM = 100;
-int main () {
+int main (int argc, char **argv) {
   FILE * fp;
   int flen;
   char * buf;

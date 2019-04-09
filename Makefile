@@ -44,8 +44,8 @@ next.pc:
 	@echo 'Name: libnext' >> next.pc
 	@echo 'Description: Parse JSON Fast' >> next.pc
 	@echo 'Version: 1.0.0' >> next.pc
-	@echo 'URL: https://github.com/zorgnax/libnext' >> next.pc
-	@echo 'Libs: -L$${libdir} -ltap' >> next.pc
+	@echo 'URL: https://github.com/quicbit-c/qb-json-next' >> next.pc
+	@echo 'Libs: -L$${libdir} -lnext' >> next.pc
 	@echo 'Cflags: -I$${includedir}' >> next.pc
 
 libnext.a: next.o
@@ -85,5 +85,46 @@ test: all
 
 .PHONY: all clean install uninstall dist check test tests
 
-# info confines output of mkdir to user output
+# TEST_SRCS = test/*.c
+# TEST_OBJS = $(patsubst %.c, %.o, $(wildcard test/*.c))
+# TESTS = $(patsubst %.c, %, $(wildcard test/*.c))
+
+# BLD = build
+
+# ifdef ANSI
+# 	# -D_BSD_SOURCE for MAP_ANONYMOUS
+# 	CFLAGS += -ansi -D_BSD_SOURCE
+# 	LDLIBS += -lbsd-compat
+# endif
+
+# all: $(TESTS)
+# 	@echo $@ "<-" $^
+
+# $(TESTS): $(BLD)/libnext.a $(BLD)/libnext.so $(TEST_OBJS)
+# 	@echo $@ "<-" $^
+# 	$(CC) $(LDFLAGS) $(TARGET_ARCH) $^ $(LDLIBS) -o $@
+
+# $(TEST_OBJS): $(BLD)/libnext.a $(TEST_SRCS)
+# 	@echo $@ "<-" $^
+# 	$(CC) $(LDFLAGS) $(TARGET_ARCH) $^ $(LDLIBS) -o $@
+
+# $(BLD)/libnext.a: $(BLD)/next.o
+# 	@echo $@ "<-" $^
+# 	$(AR) -rcs $@ $^
+
+# $(BLD)/libnext.so: $(BLD)/next.o
+# 	@echo $@ "<-" $^
+# 	$(CC) -shared $(LDFLAGS) $(TARGET_ARCH) $^ $(LDLIBS) -o $@
+
+# $(BLD)/next.o: next.c next.h
+# 	@echo $@ "<-" $^
+# 	$(CC) $(CFLAGS) $(CPPFLAGS) $(TARGET_ARCH) -c $(filter %.c, $^) $(LDLIBS) -o $@
+
+# $(TESTS): $(BLD)/*.a test/*.c
+
+
+# .PHONEY: clean all
+# clean:
+# 	rm -rf $(BLD) $(TEST_OBJS) $(TESTS)
+
 # $(info $(shell mkdir -p $(BLD)))
