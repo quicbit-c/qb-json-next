@@ -27,9 +27,8 @@ int fprint_tokens (FILE* dst, char* src, int src_len, int toks_per_line) {
   int len = 0;
   while (next(ps, NULL)) {
     tokstr(buf, ps, 0);
-    len += fprintf(dst, "%s,", buf);
+    len += fprintf(dst, "%s\n", buf);
   }
-  len += fprintf(dst, "\n");
   return len;
 }
 
