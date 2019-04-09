@@ -11,6 +11,9 @@ Three features set this JSON parser apart. qb-json-next is
 This is the C version of [javascript qb-json-next](https://github.com/quicbit-js/qb-json-next) 
 parser with optimizations that allow it to run roughly 2.5 times faster.
 
+Note that unlike the javascript version, this C version of qb-json-next is beta (version 0.0.1).  While 
+it successfully parsed large complex files, it does not yet comply 
+with the [qb-standard 100% test coverage requirement](https://github.com/quicbit-js/qb-standard).
 
 ## Optimizations
 
