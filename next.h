@@ -79,7 +79,7 @@ typedef struct nopt {
 
 pstate init (pstate ps);
 int next (pstate* ps, next_opt* opt);
-char* pos_name (int pos);
+char* posname (int pos);
 void print_ps (pstate* ps);
 int tokstr (char* buf, int lim, pstate* ps, int detail);
 

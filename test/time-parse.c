@@ -28,8 +28,7 @@ int main (int argc, char **argv) {
   char * buf;
   char tokbuf[TOK_BUF_LIM];
 
-//  char* fname = "../../json-samples/cache_150mb.json";
-  char* fname = "../../json-samples/cache_150mb.json";
+  char* fname = "../../../dev/json-samples/cache_150mb.json";
   fp = fopen(fname, "rb");
   if (fp == NULL) {
     fprintf(stderr, "error opening '%s'\n", fname); exit(1);

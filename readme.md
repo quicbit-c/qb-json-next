@@ -47,7 +47,7 @@ callers must first create the parse state structure "pstate" by calling new_ps()
 
 
 
-### next (pstate* ps)
+### next (pstate* ps, next_opt* opt)
 
 next() works just like the javascript version, except options is currently just a placeholder (unused). So
 call it with NULL:
