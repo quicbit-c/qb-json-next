@@ -1,7 +1,17 @@
+# Make refresher:
+#   $@ 							target name
+#   $^				 			prerequisites, uniqued
+#   $(filter pat, text)			inclusive filter
+#	$(wildcard pat)				path pattern
+#   $(patsubst pat, rep, text)	
+#   $(OBJS:.o=.c)	    			list of .c files for .o OBJS
+#   $(patsubst %.o, %.c, $(OBJS))	list of .c files for .o OBJS (same)
+#   $(patsubst %.c, %, $(*.c))		list of files for .c files (stipped extension)
 CC ?= gcc
 CFLAGS += -Wall -I. -fPIC -O3 -g
 PREFIX ?= $(DESTDIR)/usr/local
 TESTS = $(patsubst %.c, %, $(wildcard test/*.c))
+# BLD ?= build
 
 ifdef ANSI
 	# -D_BSD_SOURCE for MAP_ANONYMOUS
@@ -16,12 +26,13 @@ endif
 	$(CC) $(CFLAGS) $(CPPFLAGS) $(TARGET_ARCH) -c $(filter %.c, $^) $(LDLIBS) -o $@
 
 %.a:
-	$(AR) rcs $@ $(filter %.o, $^)
+	$(AR) -rcs $@ $^
 
 %.so:
-	$(CC) -shared $(LDFLAGS) $(TARGET_ARCH) $(filter %.o, $^) $(LDLIBS) -o $@
+	$(CC) -shared $(LDFLAGS) $(TARGET_ARCH) $^ $(LDLIBS) -o $@
 
-all: libnext.a libnext.so next.pc tests
+
+all: libnext.a libnext.so next.pc $(TESTS)
 
 next.pc:
 	@echo generating next.pc
@@ -74,3 +85,5 @@ test: all
 
 .PHONY: all clean install uninstall dist check test tests
 
+# info confines output of mkdir to user output
+# $(info $(shell mkdir -p $(BLD)))
