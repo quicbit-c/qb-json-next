@@ -1,5 +1,5 @@
 CC ?= gcc
-CFLAGS += -Wall -I. -fPIC -O3
+CFLAGS += -Wall -I. -fPIC -O3 -g
 PREFIX ?= $(DESTDIR)/usr/local
 TESTS = $(patsubst %.c, %, $(wildcard test/*.c))
 
@@ -50,7 +50,7 @@ $(TESTS): %: %.o libnext.a
 $(patsubst %, %.o, $(TESTS)): %.o: %.c next.h
 
 clean:
-	rm -rf *.o test/*.o next.pc libnext.a libnext.so $(TESTS)
+	rm -rf *.o test/*.o next.pc libnext.a libnext.so libnext.zip $(TESTS)
 
 install: libnext.a next.h libnext.so next.pc
 	mkdir -p $(PREFIX)/lib $(PREFIX)/include $(PREFIX)/lib/pkgconfig
@@ -62,8 +62,8 @@ install: libnext.a next.h libnext.so next.pc
 uninstall:
 	rm $(PREFIX)/lib/libnext.a $(PREFIX)/lib/libnext.so $(PREFIX)/include/next.h
 
-dist:
-	rm libnext.zip
+dist: all
+	rm -f libnext.zip
 	zip -r libnext *
 
 perf: all
