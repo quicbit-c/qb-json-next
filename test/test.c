@@ -18,7 +18,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include <tap.h>
 #include "next.h"
 
 int fprint_tokens (FILE* dst, char* src, int src_len, int toks_per_line) {
@@ -35,7 +34,7 @@ int fprint_tokens (FILE* dst, char* src, int src_len, int toks_per_line) {
 int main () {
   FILE * fp;
 
-  char* fname = "test/blockchain_unconfirmed.json";
+  char* fname = "test/blockchain-unconfirmed.json";
   fp = fopen(fname, "rb");
   if (fp == NULL) { fprintf(stderr, "error opening '%s'\n", fname); exit(1); }
 

@@ -18,7 +18,7 @@ with the [qb-standard 100% test coverage requirement](https://github.com/quicbit
 ## Optimizations
 
 For the curious, here is a summary of optimization experience working with a 150 MB json file (the node js
-index of projects) on my 2.2GHz i7 quad core laptop (macos):  
+index of projects) on my 2.2GHz i7 quad core laptop (macbook pro Mid-2014):  
 
 Compiling **without optimization** flags and without parallelization, next parses at **230 MB per second**, which
 is slower than the nodejs version.  
@@ -28,7 +28,10 @@ With optimization set to -O3, performance jumps to **550 MB per second**.
 With optimization set and unfolding of string and decimal loops (allow parallel load handling across
 cores), performance increases to **800 MB per second**.
 
-I suspect with some more optimization, qb-json-next could exceed 1 GB per second on a normal machine. 
+The theoretical maximum performance based on number of bytes able to scan is **2010 MB per second** 
+(results of perf-max.c)
+
+I suspect with some more optimization, qb-json-next could exceed 1 GB per second on a similar machine. 
 
 ## API
 

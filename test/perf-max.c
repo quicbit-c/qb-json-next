@@ -25,7 +25,6 @@ int main (int argc, char **argv) {
   FILE * fp;
   int flen;
   char * buf;
-  char tokbuf[TOK_BUF_LIM];
 
   char* fname = "../../../dev/json-samples/cache_150mb.json";
   fp = fopen(fname, "rb");
@@ -46,41 +45,46 @@ int main (int argc, char **argv) {
   if (fread(buf, 1, flen, fp) != flen) {
     fprintf(stderr, "read error\n"); exit(3);
   }
-  fprintf(stdout, "read %d bytes from '%s'\n", flen, fname);
-  for (int i=0; i<5; i++) {
+  double size_mb = (double)flen / (1024 * 1024);
+  int iter = 5;
+  int time_ticks[iter];
+  fprintf(stdout, "read %f MB from '%s'\n", size_mb, fname);
+  for (int i=0; i<iter; i++) {
       clock_t t0 = clock();
-      pstate* ps = new_ps(buf, 0, flen, 1000);
-      while (next(ps, NULL)) {
-//        print_ps(ps);
+      for (int j=0; j<flen; j++) {
+        if(buf[j] == 0) {
+            fprintf(stdout, "ERROR at byte %d\n", j);
+            return -1;
+        }
       }
       clock_t t1 = clock();
-      fprintf(stdout, "parsing finished\n");
-      fprintf(stdout, "%f seconds\n", ((double)(t1 - t0) / CLOCKS_PER_SEC));
-      tokstr(tokbuf, ps, 0);
-      printf("%s\n", tokbuf);
+      time_ticks[i] = t1 - t0;
       rewind(fp);
   }
+  fprintf(stdout, "done\n");
+  double tot_seconds = 0; 
+  for (int i=0; i<iter; i++) {
+    double seconds = ((double)time_ticks[i])/CLOCKS_PER_SEC;
+    fprintf(stdout, "Pass %d: %f seconds\n", i+1, seconds);
+    tot_seconds += seconds;
+  }
+
+  fprintf(stdout, "%f MB per second\n", (size_mb * iter)/tot_seconds);
+  
   fclose(fp);
   free(buf);
   return 0;
 }
-/*
-int main(int argc, char **argv) {
-    char* = fopen
-    char* input = "{\"a\":7, \"b\":[7,8,999] }";
-    pstate* ps = new_ps(input, 0, strlen(input), 100);
-    char buf[TOK_BUF_LIM];
-    while (next(ps, NULL)) {
-//        print_ps(ps);
-        tokstr(buf, TOK_BUF_LIM, ps, 0);
-        printf("%s\n", buf);
-    }
 
-//	int rc = ok(1 == 1, "1 equals 1");
-//    printf("rc: %d\n", rc);
-
-    return 0;
-}
-
-*/
+// Results on Mid-2014 Macbook Pro
+//
+// dads-MBP:qb-json-next dad$ ./test/perf-max
+// read 144.333522 MB from '../../../dev/json-samples/cache_150mb.json'
+// done
+// Pass 1: 0.076203 seconds
+// Pass 2: 0.070643 seconds
+// Pass 3: 0.070570 seconds
+// Pass 4: 0.070286 seconds
+// Pass 5: 0.071208 seconds
+// 2010.720262 MB per second
 
