@@ -14,6 +14,13 @@
 // ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
+// The purpose of this code is to establish a hypothetical performance limit for parsing
+// a large JSON file in C. It simply iterates over all bytes in an in-memory
+// buffer, checking every byte. Compiling and running this with
+// full optimization establishes a base line for what we can reasonably
+// assume cannot be improved upon using C and the chosen compiler.
+// Results are at the bottom of the file.
+
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
