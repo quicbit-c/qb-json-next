@@ -29,7 +29,7 @@ With optimization set and unfolding of string and decimal loops (allow parallel 
 cores), performance increases to **800 MB per second**.
 
 The theoretical maximum performance based on number of bytes able to scan is **2010 MB per second** 
-(results of perf-max.c)
+(results of [perf-max.c](https://github.com/quicbit-c/qb-json-next/blob/master/test/perf-max.c))
 
 I suspect with some more optimization, qb-json-next could exceed 1 GB per second on a similar machine. 
 
